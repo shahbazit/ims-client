@@ -83,20 +83,24 @@ export default function Users() {
       sortable: false,
       filter: false,
       cellRenderer: (params: ICellRendererParams) => (
-        <div className="d-flex h-100 align-items-center justify-content-end gap-2">
+        <div className="d-flex h-100 align-items-center justify-content-end gap-3">
           <button
-            className="btn btn-sm btn-link text-muted p-0 text-decoration-none"
+            className="btn btn-sm btn-light text-primary d-flex align-items-center justify-content-center"
+            style={{ width: '32px', height: '32px', borderRadius: '6px' }}
             data-bs-toggle="modal"
             data-bs-target="#userFormModal"
             onClick={() => handleEdit(params.data)}
+            title="Edit User"
           >
-            Edit
+            <i className="bi bi-pencil-fill" style={{ fontSize: '0.9rem' }}></i>
           </button>
           <button
-            className="btn btn-sm btn-link text-danger p-0 text-decoration-none"
+            className="btn btn-sm btn-light text-danger d-flex align-items-center justify-content-center"
+            style={{ width: '32px', height: '32px', borderRadius: '6px', background: 'var(--bs-danger-bg-subtle)' }}
             onClick={() => handleDelete(params.data.id)}
+            title="Delete User"
           >
-            Delete
+            <i className="bi bi-trash3-fill" style={{ fontSize: '0.9rem' }}></i>
           </button>
         </div>
       ),
@@ -220,9 +224,9 @@ export default function Users() {
         await userService.delete(id);
         const data = await userService.getAll();
         setUsers(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        alert('Failed to delete user');
+        alert(`Failed to delete user: ${err.message || 'Unknown error'}`);
       }
     }
   };

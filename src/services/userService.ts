@@ -13,9 +13,12 @@ export const userService = {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            console.log('Raw Users API Response:', data); // Debug log to check property casing
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return data.map((user: any) => ({
-                id: user.id,
+                // Try multiple common casings/names for ID
+                id: user.id || user.Id || user.userID || user.UserId || '',
                 fullName: `${user.firstName} ${user.lastName}`,
                 email: user.email,
                 role: user.role || 'User',
@@ -50,13 +53,16 @@ export const userService = {
 
     update: async (user: UpdateUserRequest): Promise<void> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/Users/${user.id}`, {
+            // Extract ID to use in URL, send rest in body
+            const { id, ...updateData } = user;
+
+            const response = await fetch(`${API_BASE_URL}/Users/${id}`, {
                 method: 'PUT',
                 headers: {
                     ...authHeader(),
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(user)
+                body: JSON.stringify(updateData)
             });
 
             if (!response.ok) {
@@ -71,9 +77,15 @@ export const userService = {
 
     delete: async (id: string): Promise<void> => {
         try {
+            const headers = authHeader();
+            // Remove Content-Type for DELETE as it usually has no body
+            if (headers['Content-Type']) {
+                delete headers['Content-Type'];
+            }
+
             const response = await fetch(`${API_BASE_URL}/Users/${id}`, {
                 method: 'DELETE',
-                headers: authHeader()
+                headers: headers
             });
 
             if (!response.ok) {
