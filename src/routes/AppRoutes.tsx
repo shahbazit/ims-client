@@ -5,11 +5,13 @@ import Dashboard from "../pages/Dashboard.tsx";
 import User from "../pages/Users.tsx";
 import Students from "../pages/Students.tsx";
 import Login from "../pages/Login.tsx";
+import Register from "../pages/Register.tsx";
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/*" element={
           <Layout>

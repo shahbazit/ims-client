@@ -2,21 +2,23 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/authService';
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
-        rememberMe: false
+        confirmPassword: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: value
         }));
     };
 
@@ -25,16 +27,26 @@ export default function Login() {
         setLoading(true);
         setError(null);
 
-        // Simulate login API call
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            setLoading(false);
+            return;
+        }
+
         try {
-            await authService.login({
+            await authService.register({
+                firstName: formData.firstName,
+                lastName: formData.lastName,
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                role: 'User',
+                status: 'Active' // Or 'Pending' depending on requirements
             });
-            navigate('/');
-        } catch (err) {
+            alert('Registration successful! Please login.');
+            navigate('/login');
+        } catch (err: any) {
             console.error(err);
-            setError('Invalid email or password');
+            setError(err.message || 'Registration failed');
         } finally {
             setLoading(false);
         }
@@ -42,14 +54,14 @@ export default function Login() {
 
     return (
         <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-            <div className="card shadow-sm border-0" style={{ maxWidth: '400px', width: '100%' }}>
+            <div className="card shadow-sm border-0" style={{ maxWidth: '450px', width: '100%' }}>
                 <div className="card-body p-4 p-md-5">
                     <div className="text-center mb-4">
                         <div className="display-6 text-primary mb-2">
-                            <i className="bi bi-person-circle"></i>
+                            <i className="bi bi-person-plus-fill"></i>
                         </div>
-                        <h4 className="fw-bold fs-5">Welcome Back</h4>
-                        <p className="text-muted small">Sign in to your account to continue</p>
+                        <h4 className="fw-bold fs-5">Create Account</h4>
+                        <p className="text-muted small">Sign up to get started</p>
                     </div>
 
                     {error && (
@@ -59,6 +71,33 @@ export default function Login() {
                     )}
 
                     <form onSubmit={handleSubmit}>
+                        <div className="row g-2 mb-3">
+                            <div className="col-6">
+                                <label htmlFor="firstName" className="form-label small fw-bold text-muted">FIRST NAME</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="firstName"
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="col-6">
+                                <label htmlFor="lastName" className="form-label small fw-bold text-muted">LAST NAME</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="lastName"
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        </div>
+
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label small fw-bold text-muted">EMAIL</label>
                             <div className="input-group">
@@ -77,10 +116,8 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <div className="mb-4">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                                <label htmlFor="password" className="form-label small fw-bold text-muted mb-0">PASSWORD</label>
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label small fw-bold text-muted">PASSWORD</label>
                             <div className="input-group">
                                 <span className="input-group-text bg-white border-end-0 text-muted">
                                     <i className="bi bi-lock"></i>
@@ -97,22 +134,22 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <div className="mb-4 d-flex justify-content-between align-items-center">
-                            <div className="form-check">
+                        <div className="mb-4">
+                            <label htmlFor="confirmPassword" className="form-label small fw-bold text-muted">CONFIRM PASSWORD</label>
+                            <div className="input-group">
+                                <span className="input-group-text bg-white border-end-0 text-muted">
+                                    <i className="bi bi-lock-fill"></i>
+                                </span>
                                 <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    value=""
-                                    id="rememberPassword"
-                                    name="rememberMe"
-                                    checked={formData.rememberMe}
+                                    type="password"
+                                    className="form-control"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
                                     onChange={handleChange}
+                                    required
                                 />
-                                <label className="form-check-label small text-muted" htmlFor="rememberPassword">
-                                    Remember password
-                                </label>
                             </div>
-                            <a href="#" className="text-decoration-none small text-primary" style={{ fontSize: '0.8rem' }}>Forgot password?</a>
                         </div>
 
                         <button
@@ -124,22 +161,20 @@ export default function Login() {
                             {loading ? (
                                 <span>
                                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    Signing in...
+                                    Creating Account...
                                 </span>
-                            ) : 'Sign In'}
-
-
+                            ) : 'Sign Up'}
                         </button>
 
                         <div className="text-center">
                             <p className="small text-muted mb-0">
-                                Don't have an account? <Link to="/register" className="text-primary text-decoration-none fw-bold">Sign Up</Link>
+                                Already have an account? <Link to="/login" className="text-primary text-decoration-none fw-bold">Sign In</Link>
                             </p>
                         </div>
 
                     </form>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

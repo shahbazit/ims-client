@@ -1,6 +1,6 @@
 const API_BASE_URL = '/api';
 
-import type { LoginRequest, LoginResponse } from '../types';
+import type { LoginRequest, LoginResponse, CreateUserRequest } from '../types';
 
 export const authService = {
     login: async (request: LoginRequest): Promise<LoginResponse> => {
@@ -23,6 +23,22 @@ export const authService = {
             // Store user details if needed, e.g. localStorage.setItem('user', JSON.stringify(data.user));
         }
         return data;
+    },
+
+    register: async (request: CreateUserRequest): Promise<void> => {
+        const response = await fetch(`${API_BASE_URL}/Auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': '*/*'
+            },
+            body: JSON.stringify(request)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Registration failed');
+        }
     },
 
     logout: () => {
