@@ -16,7 +16,7 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
     useMatch("/lock");
 
   return (
-   <nav id="sidebar" className={`sidebar ${isOpen ? "show-nav" : "active"}`}>
+    <nav id="sidebar" className={`sidebar ${isOpen ? "show-nav" : "active"}`}>
 
       <div className="sidebar-header">
         <h3>
@@ -43,6 +43,14 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
           </NavLink>
         </li>
 
+        {/* Students */}
+        <li>
+          <NavLink to="/students" className={linkClass}>
+            <i className="fa-solid fa-graduation-cap"></i>
+            <span>Students</span>
+          </NavLink>
+        </li>
+
         {/* Reports */}
         <li>
           <NavLink to="/reports" className={linkClass}>
@@ -64,9 +72,8 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
           <a
             data-bs-toggle="collapse"
             href="#ecommerceSubmenu"
-            className={`nav-link d-flex justify-content-between align-items-center ${
-              ecommerceMatch ? "" : "collapsed"
-            }`}
+            className={`nav-link d-flex justify-content-between align-items-center ${ecommerceMatch ? "" : "collapsed"
+              }`}
             aria-expanded={ecommerceMatch ? "true" : "false"}
           >
             <div className="d-flex align-items-center">
@@ -78,9 +85,8 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
 
           <ul
             id="ecommerceSubmenu"
-            className={`collapse list-unstyled ps-4 ${
-              ecommerceMatch ? "show" : ""
-            }`}
+            className={`collapse list-unstyled ps-4 ${ecommerceMatch ? "show" : ""
+              }`}
           >
             <li>
               <NavLink to="/products" className={linkClass}>Products</NavLink>
@@ -99,9 +105,8 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
           <a
             data-bs-toggle="collapse"
             href="#authSubmenu"
-            className={`nav-link d-flex justify-content-between align-items-center ${
-              authMatch ? "" : "collapsed"
-            }`}
+            className={`nav-link d-flex justify-content-between align-items-center ${authMatch ? "" : "collapsed"
+              }`}
             aria-expanded={authMatch ? "true" : "false"}
           >
             <div className="d-flex align-items-center">
@@ -113,9 +118,8 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
 
           <ul
             id="authSubmenu"
-            className={`collapse list-unstyled ps-4 ${
-              authMatch ? "show" : ""
-            }`}
+            className={`collapse list-unstyled ps-4 ${authMatch ? "show" : ""
+              }`}
           >
             <li>
               <NavLink to="/login" className={linkClass}>Login</NavLink>

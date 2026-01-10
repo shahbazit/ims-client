@@ -16,6 +16,8 @@ export default function TopNavbar({ onToggleSidebar }: TopNavbarProps) {
     switch (pathname) {
       case "/users":
         return "User Management";
+      case "/students":
+        return "Student Management";
       case "/":
         return "Dashboard";
       default:

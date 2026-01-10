@@ -44,3 +44,29 @@ export interface UpdateUserRequest {
     status?: string;
     password?: string;
 }
+
+// Student Types
+export interface Student {
+    id: string;
+    fullName: string;
+    email: string;
+    grade: string;
+    status: string;
+}
+
+export interface CreateStudentRequest {
+    firstName: string;
+    lastName: string;
+    email: string;
+    grade?: string;
+    status?: string;
+}
+
+export interface UpdateStudentRequest {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    grade?: string;
+    status?: string;
+}
