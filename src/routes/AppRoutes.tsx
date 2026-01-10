@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Dashboard from "../pages/Dashboard.tsx";
 import User from "../pages/Users.tsx";
+import Students from "../pages/Students.tsx";
 import Login from "../pages/Login.tsx";
 
 export default function AppRoutes() {
@@ -15,6 +16,7 @@ export default function AppRoutes() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/users" element={<User />} />
+              <Route path="/students" element={<Students />} />
               {/* Catch all redirect to dashboard or login */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
